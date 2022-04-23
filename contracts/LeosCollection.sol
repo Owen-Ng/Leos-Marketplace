@@ -21,13 +21,15 @@ contract LeosCollection is ERC721URIStorage, ReentrancyGuard{
         uint itemId;
         address payable owner;
         uint256 price;  
+        string description;
         
     }
     event CollectionCreated(
         uint indexed itemId,
         address owner,
-        uint256 price 
-    );
+        uint256 price ,
+        string description
+        );
 
     /**
     Initialization. Owner will be the person who deployed the contract
@@ -64,7 +66,7 @@ contract LeosCollection is ERC721URIStorage, ReentrancyGuard{
     Create a collection. 
     It result in the incrementation of CollectionIds
      */
-    function createCollection(string memory tokenURI, uint256 price) public payable returns(uint){
+    function createCollection(string memory tokenURI, uint256 price, string memory description) public payable returns(uint){
         require(msg.value == ListingPrice, "Listing price is 0.08 ether");
         _CollectionIds.increment();
         uint256 newTokenId = _CollectionIds.current(); 
@@ -74,12 +76,14 @@ contract LeosCollection is ERC721URIStorage, ReentrancyGuard{
         idToCollection[newTokenId] = Collection(
             newTokenId,
             payable(msg.sender),
-            price
+            price,
+            description
         );
         emit CollectionCreated(
             newTokenId,
             msg.sender,
-            price
+            price,
+            description
         );
         owner.transfer(ListingPrice);
         return newTokenId;

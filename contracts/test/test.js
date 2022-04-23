@@ -20,8 +20,8 @@ describe("Leos", function() {
       const price = ethers.utils.parseUnits('1', 'ether') // the listing price set by the collection creator
 
       console.log("Create Collections")
-      await Collection.createCollection("https://www.mytokenlocation.com", price,{value : CollectionlistingPrice});
-      await Collection.createCollection("https://www.mytokenlocation.com", price,{value : CollectionlistingPrice});
+      await Collection.createCollection("https://www.mytokenlocation.com", price,"1",{value : CollectionlistingPrice});
+      await Collection.createCollection("https://www.mytokenlocation.com", price,"2",{value : CollectionlistingPrice});
       console.log("After Create")
 
       var items = await Collection.fetchAllCollections(); 
@@ -93,8 +93,8 @@ describe("Leos", function() {
 
       const price = ethers.utils.parseUnits('1', 'ether') // the listing price set by the collection creator
  
-      await Collection.createCollection("https://www.mytokenlocation.com", price,{value : CollectionlistingPrice});
-      await Collection.createCollection("https://www.mytokenlocation.com", price,{value : CollectionlistingPrice});
+      await Collection.createCollection("https://www.mytokenlocation.com", price,"1",{value : CollectionlistingPrice});
+      await Collection.createCollection("https://www.mytokenlocation.com", price,"2",{value : CollectionlistingPrice});
       var items = await Collection.fetchAllCollections(); 
       //   struct Collection{
       //     uint itemId;
@@ -206,6 +206,9 @@ describe("Leos", function() {
         console.log("Resell the token");
         await Leos.connect(buyerAddress).resellToken(marketItem1[1].itemId, ethers.utils.parseUnits('2', 'ether'), {value: leosListingPrice })
         console.log(await Leos.connect(buyerAddress).fetchItemsListed());
+
+        console.log("Testing getting one item")
+        console.log(await Leos.getItem(1))
     })
     it("Should create and execute market sales", async function() {
       const LeosContract= await ethers.getContractFactory("Leos")
@@ -233,8 +236,8 @@ describe("Leos", function() {
       const auctionPrice = ethers.utils.parseUnits('1', 'ether')
 
       console.log("Create Collections")
-      await Collection.createCollection("https://www.mytokenlocation.com", auctionPrice,{value : CollectionlistingPrice});
-      await Collection.createCollection("https://www.mytokenlocation.com", auctionPrice,{value : CollectionlistingPrice});
+      await Collection.createCollection("https://www.mytokenlocation.com", auctionPrice,"1",{value : CollectionlistingPrice});
+      await Collection.createCollection("https://www.mytokenlocation.com", auctionPrice,"2",{value : CollectionlistingPrice});
       console.log("After Create")
 
       
