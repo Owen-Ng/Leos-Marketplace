@@ -11,7 +11,7 @@ const Navbar = () => {
         <Link href="/">
             <div  className="text-white md:flex-[0.5]  flex-initial justify-center items-center">
                 <div className="display: inline-flex  ">
-                    <img src={logo.src} alt="logo" className="w-12 cursor-pointer" /> <span className="font-bold text-xl p-3   text-gradient">Leos Marketplace</span> 
+                    <img src={logo.src} alt="logo" className="w-12 cursor-pointer" /> <span className="font-bold text-xl p-3 text-gradient cursor-pointer">Leos Marketplace</span> 
                 </div> 
             </div>
         </Link>
@@ -19,7 +19,7 @@ const Navbar = () => {
         <Link href="/collections">
             <li className={`mx-4 cursor-pointer`} >Collections</li>
         </Link>
-        <Link href="/portfolio">
+        <Link href={{pathname: "/portfolio", query: {data: "Hello"}}}>
             <li className={`mx-4 cursor-pointer`} >My Portfolio</li>
         </Link>
         <Link href="/profile">
