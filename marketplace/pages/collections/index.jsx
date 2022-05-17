@@ -17,6 +17,13 @@ const ButtonAbsolute = styled.div`
   position: absolute;
   right: 0px; 
 `
+const ImgFrame = styled.div` 
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 200px;
+   
+`
 const Collections = () => { 
   const [Collections, setCollections] = React.useState();
     const [LoadingState, setLoadingState] = React.useState("not loaded");
@@ -33,10 +40,10 @@ const Collections = () => {
             const meta = await axios.get(tokenUri);
 
             let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-
+            console.log(i.itemId)
             let item = {
                 price,
-                tokenId: i.itemId.toNumber(), 
+                tokenId: i.itemId, 
                 owner: i.owner,
                 image: meta.data.image,
                 name: meta.data.name,
@@ -54,49 +61,43 @@ const Collections = () => {
   return (
     <div>
       Collections 
-      <ButtonAbsolute>
-        <Link href={`/collections/create-collection`}>
-          <button  
-            className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
-          >
-            <BsFillFileEarmarkPlusFill className="text-white mr-2" />
-            <p className="text-white text-base font-semibold">
-              Create Collection
-            </p>
-          </button>
-        </Link>
-        </ButtonAbsolute>
-        <div>
-            <Link href={`/collections/create-collection`}
-                className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
-                >
-                    <div>
-              <AiFillPlayCircle className="text-white mr-2" />
+      
+        <div> 
+          <ButtonAbsolute>
+          <Link href={`/collections/create-collection`}>
+            <button  
+              className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+            >
+              <BsFillFileEarmarkPlusFill className="text-white mr-2" />
               <p className="text-white text-base font-semibold">
                 Create Collection
               </p>
-              </div>
-            </Link>
-
+            </button>
+          </Link>
+          </ButtonAbsolute>
             {LoadingState === "loaded" && Collections.length > 0? 
-            <div className="flex justify-center">
-            <div className="px-4" style={{ maxWidth: '1600px' }}>
+            <div className="flex justify-start">
+            <div className="px-4" style={{ width: '1200px' }}>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
                 {
                   Collections.map((collection, i) => (
-                    <div key={i} className="border shadow rounded-xl overflow-hidden">
-                      <img src={collection.image} />
-                      <div className="p-4">
-                        <p style={{ height: '64px' }} className="text-2xl font-semibold">{collection.name}</p>
-                        <div style={{ height: '70px', overflow: 'hidden' }}>
-                          <p className="text-gray-400">{collection.description}</p>
+                    <Link href={`/collections/${collection.tokenId}`}>
+                      <div key={i} className="border shadow rounded-xl overflow-hidden cursor-pointer">
+                        <ImgFrame>
+                          <img src={collection.image} />
+                        </ImgFrame>
+                        <div className="p-4">
+                          <p style={{ height: '40px' }} className="text-2xl font-semibold">{collection.name}</p>
+                          <div style={{ height: '20px', overflow: 'hidden' }}>
+                            <p className="text-gray-400">{collection.description}</p>
+                          </div>
+                        </div>
+                        <div className="p-4 bg-black">
+                          <p className="text-l mb-4 font-bold text-white">Listing Price: <br/> {collection.price} MATIC</p>
+                          {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(collection)}>Buy</button> */}
                         </div>
                       </div>
-                      <div className="p-4 bg-black">
-                        <p className="text-2xl mb-4 font-bold text-white">Listing Price: {collection.price} MATIC</p>
-                        {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(collection)}>Buy</button> */}
-                      </div>
-                    </div>
+                    </Link>
                   ))
                 }
               </div>

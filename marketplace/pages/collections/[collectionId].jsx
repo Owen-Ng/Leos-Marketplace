@@ -1,28 +1,51 @@
-import React from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link';
-import { LeosnftAddress } from '../../secrets/contractAddress';
-import LeosnftJSON from "../../secrets/Leosnft.json"
+import React from 'react' 
+import {useRouter} from 'next/router';
 import { LeosAddress } from '../../secrets/contractAddress';
 import LeosJSON from "../../secrets/Leos.json";
 import { rpcHttp } from '../../secrets/contractAddress';
 import { ethers } from 'ethers';
+import { LeosCollectionAddress } from '../../secrets/contractAddress';
+import LeosCollectionJSON from "../../secrets/LeosCollection.json"
+import styled from "styled-components"
+import { BsFillFileEarmarkPlusFill } from "react-icons/bs"; 
+import Link from 'next/link';
+import axios from 'axios'
+const ButtonAbsolute = styled.div`
+  position: absolute;
+  right: 1px; 
+`
+const ImgFrame = styled.div` 
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 200px;
+   
+`
+const displayName = (rank) =>{
+  while (rank.length < 4){
+    rank = "0"+ rank;
+
+  }
+  return "#"+ rank;
+}
 const nft = () => {
     const router = useRouter();
-    const {nftId} = router.query;
+    const {collectionId} = router.query;
+    console.log(router.query)
+    
     const [NFTs, setNFTs] = React.useState([]); 
     const [LoadingState, setLoadingState] = React.useState("not loaded");
 
-    const loadNFTs = () =>{
+    const loadNFTs = async() =>{
+      if (collectionId !== undefined){
         const provider = new ethers.providers.JsonRpcProvider(rpcHttp ); 
-        const Leosnft = new ethers.Contract(LeosnftAddress, LeosnftJSON.abi, provider);
-
+        const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, provider);
         const Leos = new ethers.Contract(LeosAddress, LeosJSON.abi, provider);
-
-        const nftNFTs = await Leos.fetchnftItems(nftId);
+        console.log(collectionId)
+        const nftNFTs = await Leos.fetchCollectionItems(collectionId);
 
         const items = await Promise.all(nftNFTs.map(async i =>{ 
-            const tokenUri = await Leosnft.tokenURI(i.itemId);
+            const tokenUri = await Leos.tokenURI(i.itemId);
             const meta = await axios.get(tokenUri);
 
             let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
@@ -35,14 +58,16 @@ const nft = () => {
                 image: meta.data.image,
                 name: meta.data.name,
                 description: meta.data.description,
-                sold: i.sold,
-                nftId: i.nftId,
-                nftAddress: i.nftAddress
+                sold: i.sold,  
+                CollectionId: i.CollectionId,
+                CollectionAddress: i.CollectionAddress
             }
             return item;
         }))
         setNFTs(items);
         setLoadingState("loaded");
+      }
+        
     }
 
     React.useEffect(()=>{
@@ -50,24 +75,38 @@ const nft = () => {
     },[])
     
     return (
-        <div>
-            {nftId}
+        <div> 
+            <div>
+            <ButtonAbsolute>
+              <Link href={`/collections/create-nft/?id=${collectionId}`}>
+                <button  
+                  className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+                >
+                  <BsFillFileEarmarkPlusFill className="text-white mr-2" />
+                  <p className="text-white text-base font-semibold">
+                    Create NFT
+                  </p>
+                </button>
+              </Link>
+            </ButtonAbsolute>
             {LoadingState === "loaded" && NFTs.length > 0? 
-            <div className="flex justify-center">
-            <div className="px-4" style={{ maxWidth: '1600px' }}>
+            
+            <div className="flex justify-start">
+            <div className="px-4" style={{ width: '1200px' }}>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
                 {
                   NFTs.map((nft, i) => (
                     <div key={i} className="border shadow rounded-xl overflow-hidden">
-                      <img src={nft.image} />
-                      <div className="p-4">
-                        <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.itemId}</p>
-                        <div style={{ height: '70px', overflow: 'hidden' }}>
-                          <p className="text-gray-400">{nft.description}</p>
+                      <ImgFrame>
+                        <img src={nft.image}  />
+                      </ImgFrame>
+                      <div className="p-4"> 
+                        <div style={{ height: '20px', overflow: 'hidden' }}>
+                          <p className="text-gray-400">{displayName(nft.tokenId.toString())}</p>
                         </div>
                       </div>
                       <div className="p-4 bg-black">
-                        <p className="text-2xl mb-4 font-bold text-white">{nft.price} MATIC</p>
+                        <p className="text-l mb-4 font-bold text-white">{nft.price} MATIC</p>
                         {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button> */}
                       </div>
                     </div>
@@ -79,6 +118,7 @@ const nft = () => {
             :
             "No nfts were created"
             }
+        </div>
         </div>
     )
 }
