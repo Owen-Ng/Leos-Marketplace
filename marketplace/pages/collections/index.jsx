@@ -24,6 +24,15 @@ const ImgFrame = styled.div`
   height: 200px;
    
 `
+const Banner = styled.div`
+  /* background-color: #0c1740; */
+  border-color: #364fa7;
+  border-width: 1px;
+
+  &:hover{
+    box-shadow: 0 0 3px 3px #364fa7;
+  }
+`
 const Collections = () => { 
   const [Collections, setCollections] = React.useState();
     const [LoadingState, setLoadingState] = React.useState("not loaded");
@@ -82,7 +91,7 @@ const Collections = () => {
                 {
                   Collections.map((collection, i) => (
                     <Link href={`/collections/${collection.tokenId}`}>
-                      <div key={i} className="border shadow rounded-xl overflow-hidden cursor-pointer">
+                      <Banner key={i} className="border shadow rounded-xl overflow-hidden cursor-pointer">
                         <ImgFrame>
                           <img src={collection.image} />
                         </ImgFrame>
@@ -96,7 +105,7 @@ const Collections = () => {
                           <p className="text-l mb-4 font-bold text-white">Listing Price: <br/> {collection.price} MATIC</p>
                           {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(collection)}>Buy</button> */}
                         </div>
-                      </div>
+                      </Banner>
                     </Link>
                   ))
                 }
