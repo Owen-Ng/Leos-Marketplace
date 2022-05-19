@@ -1,11 +1,11 @@
 import React from 'react' 
 import {useRouter} from 'next/router';
-import { LeosAddress } from '../../secrets/contractAddress';
-import LeosJSON from "../../secrets/Leos.json";
-import { rpcHttp } from '../../secrets/contractAddress';
+import { LeosAddress } from '../../../secrets/contractAddress';
+import LeosJSON from "../../../secrets/Leos.json";
+import { rpcHttp } from '../../../secrets/contractAddress';
 import { ethers } from 'ethers';
-import { LeosCollectionAddress } from '../../secrets/contractAddress';
-import LeosCollectionJSON from "../../secrets/LeosCollection.json"
+import { LeosCollectionAddress } from '../../../secrets/contractAddress';
+import LeosCollectionJSON from "../../../secrets/LeosCollection.json"
 import styled from "styled-components"
 import { BsFillFileEarmarkPlusFill } from "react-icons/bs"; 
 import Link from 'next/link';
@@ -20,6 +20,14 @@ const ImgFrame = styled.div`
   width: 100%;
   height: 200px;
    
+`
+const Shadow = styled.div`
+    cursor: pointer;
+     border-radius: 12px;
+     overflow: hidden;
+    &:hover{
+        box-shadow: 0 0 3px 3px white;
+    }
 `
 const displayName = (rank) =>{
   while (rank.length < 4){
@@ -72,13 +80,13 @@ const nft = () => {
 
     React.useEffect(()=>{
         loadNFTs();
-    },[])
+    },[collectionId])
     
     return (
         <div> 
             <div>
             <ButtonAbsolute>
-              <Link href={`/collections/create-nft/?id=${collectionId}`}>
+              <Link href={`/collections/${collectionId}/create-nft`}>
                 <button  
                   className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
                 >
@@ -96,20 +104,22 @@ const nft = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
                 {
                   NFTs.map((nft, i) => (
-                    <div key={i} className="border shadow rounded-xl overflow-hidden">
-                      <ImgFrame>
-                        <img src={nft.image}  />
-                      </ImgFrame>
-                      <div className="p-4"> 
-                        <div style={{ height: '20px', overflow: 'hidden' }}>
-                          <p className="text-gray-400">{displayName(nft.tokenId.toString())}</p>
-                        </div>
-                      </div>
-                      <div className="p-4 bg-black">
-                        <p className="text-l mb-4 font-bold text-white">{nft.price} MATIC</p>
-                        {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button> */}
-                      </div>
-                    </div>
+                        <Link href={`/collections/${collectionId}/${nft.tokenId}`}>
+                            <Shadow key = {i} > 
+                                    <ImgFrame>
+                                        <img src={nft.image}  />
+                                    </ImgFrame>
+                                    <div className="p-4"> 
+                                        <div style={{ height: '20px', overflow: 'hidden' }}>
+                                        <p className="text-gray-400">{displayName(nft.tokenId.toString())}</p>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 bg-black">
+                                        <p className="text-l mb-4 font-bold text-white">{nft.price} MATIC</p>
+                                        {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button> */}
+                                    </div> 
+                            </Shadow>
+                        </Link>
                   ))
                 }
               </div>

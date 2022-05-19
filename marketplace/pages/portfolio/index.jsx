@@ -28,7 +28,15 @@ const Banner = styled.div`
     box-shadow: 0 0 3px 3px #364fa7;
   }
 `
-
+const FlexBox = styled.div`
+  display: flex;
+`
+const TextHeader = styled.div`
+  margin: 10px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+`
 const Portfolio = () => {
   const [OnSale, setOnSale] = React.useState([]);
   const [Own, setOwn] = React.useState([]);
@@ -67,7 +75,7 @@ const Portfolio = () => {
           }
           return item;
       }))
-      setOwn(item); 
+      setOwn(items); 
     }catch(e){
       console.log("loadNfts issue" + e.toString());
     }
@@ -115,12 +123,13 @@ const Portfolio = () => {
   },[])
   return (
     <div>
-      <h2>Portfolio</h2>
+      <h1 style={{color: "white", margin: "10px"}}>Portfolio</h1>
       {IsLoaded === true & Own.length > 0? 
         <div>
-          Sold
+          <TextHeader>My Inventory</TextHeader> 
+          <FlexBox>
           {Own.map((nft, i)=>
-            <div key={i + "sold"} className="border shadow rounded-xl overflow-hidden">
+            <div key={i + "sold"} className="w-[250px] border shadow rounded-xl overflow-hidden m-2 ">
               <ImgFrame>
                 <img src={nft.image}  />
               </ImgFrame>
@@ -135,39 +144,17 @@ const Portfolio = () => {
               </div>
             </div> 
           )}
+          </FlexBox>
         </div> 
       :
       ""
        }
-      {IsLoaded === true & OnSale.length > 0? 
-        <div>
-          On Sale
-          {OnSale.map((nft,i)=>
-          <div key={i + "Sale"} className="border shadow rounded-xl overflow-hidden">
-              <ImgFrame>
-                <img src={nft.image}  />
-              </ImgFrame>
-              <div className="p-4"> 
-                <div style={{ height: '20px', overflow: 'hidden' }}>
-                  <p className="text-gray-400">{displayName(nft.tokenId.toString())}</p>
-                </div>
-              </div>
-              <div className="p-4 bg-black">
-                <p className="text-l mb-4 font-bold text-white">{nft.price} MATIC</p>
-                {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button> */}
-              </div>
-            </div> 
-          
-          )
-          }
-        </div> 
-        :
-        ""
-      }
+       
 
       {IsLoaded === true & MyCollections.length > 0? 
       <div>
-        Collections
+        <TextHeader>My Collections</TextHeader>
+        <FlexBox>
         {MyCollections.map((collection, i)=>
           <Link href={`/collections/${collection.tokenId}`}>
             <Banner key={i} className="border shadow rounded-xl overflow-hidden cursor-pointer">
@@ -188,6 +175,7 @@ const Portfolio = () => {
           </Link>
         
         )}
+        </FlexBox>
       </div>
       :
       ""

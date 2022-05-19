@@ -29,11 +29,36 @@ const ImgFrame = styled.div`
   width: 100%;
   height: 200px;
 `
+
+const RandomCollection = ({Collections}) =>{
+  const Random = Math.floor(Math.random()* Collections.length) ;
+  return (
+    <Link href={`/collections/${Collections[Random].tokenId}`}> 
+           
+          <Banner   className="border shadow rounded-xl overflow-hidden cursor-pointer">
+            <ImgFrame>
+              <img src={Collections[Random ].image} />
+            </ImgFrame>
+            <div className="p-4">
+              <p style={{ height: '40px' }} className="text-2xl font-semibold">{Collections[Random].name}</p>
+              <div style={{ height: '20px', overflow: 'hidden' }}>
+                <p className="text-gray-400">{Collections[Random].description}</p>
+              </div>
+            </div>
+            <div className="p-4 bg-black">
+              <p className="text-l mb-4 font-bold text-white">Listing Price: <br/> {Collections[Random].price} MATIC</p>
+              {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(collection)}>Buy</button> */}
+            </div>
+          </Banner>
+        </Link>
+  )
+}
 const Home  = () => {
   const [Collections, setCollections] = React.useState([]);
   const [LoadingState, setLoadingState] = React.useState("not loaded");
   const [NFTs, setNFTs] = React.useState([]);
   const provider = new ethers.providers.JsonRpcProvider(rpcHttp ); 
+  
   const loadCollections = async () =>{
         try{
           const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, provider);
@@ -135,23 +160,7 @@ const Home  = () => {
 
         <div style={{width: "500px"}} className="flex flex-col flex-1 items-center justify-end w-100px ">
           { LoadingState === "loaded" & Collections.length > 0 ?
-          <Link href={`/collections/${Collections[0].tokenId}`}>
-          <Banner   className="border shadow rounded-xl overflow-hidden cursor-pointer">
-            <ImgFrame>
-              <img src={Collections[Math.floor(Math.random()* Collections.length)  ].image} />
-            </ImgFrame>
-            <div className="p-4">
-              <p style={{ height: '40px' }} className="text-2xl font-semibold">{Collections[0].name}</p>
-              <div style={{ height: '20px', overflow: 'hidden' }}>
-                <p className="text-gray-400">{Collections[0].description}</p>
-              </div>
-            </div>
-            <div className="p-4 bg-black">
-              <p className="text-l mb-4 font-bold text-white">Listing Price: <br/> {Collections[0].price} MATIC</p>
-              {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(collection)}>Buy</button> */}
-            </div>
-          </Banner>
-        </Link>
+           <RandomCollection Collections={Collections}/>
         :
         ""
         }

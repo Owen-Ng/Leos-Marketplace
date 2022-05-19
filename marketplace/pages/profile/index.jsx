@@ -26,8 +26,7 @@ const Profile = () => {
     LoadInfo()
   },[])
 
-  return (
-    <Center>
+  return ( 
       <div style = {{width:"400px", height:"200px", margin:"auto"}} className="p-3 rounded-xl h-40 my-5 eth-card .white-glassmorphism ">
         <div className="flex justify-between flex-col w-full h-full">
           <div className="flex justify-between items-start">
@@ -51,8 +50,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </div>
-    </Center>
+      </div> 
   )
 }
 

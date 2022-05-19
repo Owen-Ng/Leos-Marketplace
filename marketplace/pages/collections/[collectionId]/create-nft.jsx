@@ -5,11 +5,11 @@ import { useRouter } from 'next/router'
 import Web3Modal from 'web3modal' 
 import Link from 'next/link';
 
-import { LeosAddress } from '../../secrets/contractAddress'
-import LeosNFTJSON from "../../secrets/Leos.json";
+import { LeosAddress } from '../../../secrets/contractAddress'
+import LeosNFTJSON from "../../../secrets/Leos.json";
 
-import { LeosCollectionAddress } from '../../secrets/contractAddress';
-import LeosCollectionJSON from "../../secrets/LeosCollection.json"
+import { LeosCollectionAddress } from '../../../secrets/contractAddress';
+import LeosCollectionJSON from "../../../secrets/LeosCollection.json"
 import { BsThreeDotsVertical } from 'react-icons/bs'
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0') 
@@ -17,8 +17,8 @@ const CreateNft = () => {
     const [fileUrl, setFileUrl] = useState(null)
     const [formInput, updateFormInput] = useState({ price: '',  description: '' })
     const router = useRouter()
-    const {id} = router.query;
-    console.log(id)
+    const {collectionId} = router.query;
+     
     async function onChange(e) {
       const file = e.target.files[0]
       try {
@@ -67,15 +67,15 @@ const CreateNft = () => {
          
           const listingPrice = await NFTcontract.getListingPrice() 
 
-          const collectionfee = await CollectionContract.getCollectionListingPrice(id)
+          const collectionfee = await CollectionContract.getCollectionListingPrice(collectionId)
 
           const totalListingFee = listingPrice.add(collectionfee)
 
 
-      
-          let transaction = await NFTcontract.createToken(url, price, collectionfee, id, LeosCollectionAddress, { value: totalListingFee })
+          console.log(listingPrice, collectionfee, totalListingFee)
+          let transaction = await NFTcontract.createToken(url, price, collectionfee,collectionId, LeosCollectionAddress, { value: totalListingFee })
           await transaction.wait()
-          router.push(`/collections/${id}`)
+          router.push(`/collections/${collectionId}`)
         }
       
         return (
