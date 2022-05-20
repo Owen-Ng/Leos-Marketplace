@@ -90,7 +90,7 @@ const Collections = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
                 {
                   Collections.map((collection, i) => (
-                    <Link href={`/collections/${collection.tokenId}`}>
+                    <Link key={i}  href={`/collections/${collection.tokenId}`}>
                       <Banner key={i} className="border shadow rounded-xl overflow-hidden cursor-pointer">
                         <ImgFrame>
                           <img src={collection.image} />

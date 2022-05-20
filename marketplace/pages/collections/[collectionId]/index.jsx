@@ -104,8 +104,8 @@ const nft = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
                 {
                   NFTs.map((nft, i) => (
-                        <Link href={`/collections/${collectionId}/${nft.tokenId}`}>
-                            <Shadow key = {i} > 
+                        <Link key = {i} href={`/collections/${collectionId}/${nft.tokenId}`}>
+                            <Shadow  > 
                                     <ImgFrame>
                                         <img src={nft.image}  />
                                     </ImgFrame>
