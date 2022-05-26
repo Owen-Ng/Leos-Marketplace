@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React,{ useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
@@ -12,7 +12,7 @@ const CreateNft = () => {
     const [fileUrl, setFileUrl] = useState(null)
     const [formInput, updateFormInput] = useState({ price: '',  description: '' })
     const router = useRouter()
-    const {getLeosContract, getLeosCollectionContract, ConnectWallet} = React.useContext(WalletContext);
+    const {getLeosContract, getLeosCollectionContract, ConnectWallet, currentAccount} = React.useContext(WalletContext);
     const {collectionId} = router.query;
      
     async function onChange(e) {
@@ -47,9 +47,7 @@ const CreateNft = () => {
             console.log('Error uploading file: ', error)
           }  
         }
-        async function createNFT(url) { 
-          
-          await ConnectWallet()
+        async function createNFT(url) {  
           
           console.log("awdadw")
           /* next, create the item */
@@ -62,11 +60,11 @@ const CreateNft = () => {
 
           const collectionfee = await CollectionContract.getCollectionListingPrice(collectionId)
 
-          const totalListingFee = listingPrice.add(collectionfee)
+          const totalListingFee =  listingPrice.add(collectionfee) 
 
 
           console.log(listingPrice, collectionfee, totalListingFee)
-          let transaction = await NFTcontract.createToken(url, price, collectionfee,collectionId, LeosCollectionAddress, { value: totalListingFee })
+          let transaction = await NFTcontract.createToken(url, price, collectionfee,collectionId , { value: totalListingFee })
           await transaction.wait()
           router.push(`/collections/${collectionId}`)
         }
