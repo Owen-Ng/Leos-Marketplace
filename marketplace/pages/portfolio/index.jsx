@@ -13,6 +13,14 @@ const ButtonAbsolute = styled.div`
   position: absolute;
   right: 1px; 
 `
+const Shadow = styled.div`
+    cursor: pointer;
+     border-radius: 12px;
+     overflow: hidden;
+    &:hover{
+        box-shadow: 0 0 3px 3px white;
+    }
+`
 const ImgFrame = styled.div` 
   display: flex;
   justify-content: center;
@@ -129,7 +137,9 @@ const Portfolio = () => {
           <TextHeader>My Inventory</TextHeader> 
           <FlexBox>
           {Own.map((nft, i)=>
-            <div key={i + "sold"} className="w-[250px] border shadow rounded-xl overflow-hidden m-2 ">
+// /collections/${collectionId}/${nft.tokenId}
+          <Link href={`/collections/${nft.CollectionId}/${nft.tokenId}`}>
+            <Shadow key={i + "sold"} className="w-[250px] m-2 border shadow rounded-xl overflow-hidden m-2  ">
               <ImgFrame>
                 <img src={nft.image}  />
               </ImgFrame>
@@ -142,7 +152,8 @@ const Portfolio = () => {
                 <p className="text-l mb-4 font-bold text-white">{nft.price} MATIC</p>
                 {/* <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button> */}
               </div>
-            </div> 
+            </Shadow> 
+          </Link>
           )}
           </FlexBox>
         </div> 
@@ -157,7 +168,7 @@ const Portfolio = () => {
         <FlexBox>
         {MyCollections.map((collection, i)=>
           <Link href={`/collections/${collection.tokenId}`}>
-            <Banner key={i} className="border shadow rounded-xl overflow-hidden cursor-pointer">
+            <Banner key={i} className="w-[250px] m-2 border shadow rounded-xl overflow-hidden cursor-pointer">
               <ImgFrame>
                 <img src={collection.image} />
               </ImgFrame>

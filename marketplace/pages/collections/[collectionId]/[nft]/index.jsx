@@ -1,16 +1,10 @@
 import React from 'react'
 import Link from 'next/link';
 import axios from 'axios'
-import {useRouter} from 'next/router';
-import { LeosAddress } from '../../../../secrets/contractAddress';
-import LeosJSON from "../../../../secrets/Leos.json";
-import { rpcHttp } from '../../../../secrets/contractAddress';
+import {useRouter} from 'next/router'; 
+import styled from "styled-components" 
+import {WalletContext} from "../../../context/WalletConnection"
 import { ethers } from 'ethers';
-import { LeosCollectionAddress } from '../../../../secrets/contractAddress';
-import LeosCollectionJSON from "../../../../secrets/LeosCollection.json"
-import styled from "styled-components"
-import Web3Modal from 'web3modal' 
-
 const Container = styled.div`
   
 `
@@ -36,18 +30,15 @@ const displayName = (rank) =>{
 const Detail = () => {
     const router = useRouter();
     const {collectionId, nft} = router.query;
-    const [nftNft, setNftNft] = React.useState();
-    const [AccountAddress, setAccountAddress] = React.useState(undefined);
-    const [Signer, setSigner] = React.useState(undefined)
+    const [nftNft, setNftNft] = React.useState(); 
     const [Input, setInput] = React.useState(false);
     const [FormInput, setFormInput] = React.useState({price: ""})
+    const {getLeosCollectionContract, getLeosContract, ConnectWallet, currentAccount} = React.useContext(WalletContext)
     const LoadNft = async()=>{
 
-      if (collectionId !== undefined){
-        const provider = new ethers.providers.JsonRpcProvider(rpcHttp ); 
-        const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, provider);
-        const Leos = new ethers.Contract(LeosAddress, LeosJSON.abi, provider);
-        console.log(Signer, AccountAddress)
+      if (collectionId !== undefined){ 
+        const LeosCollection = getLeosCollectionContract();
+        const Leos = getLeosContract(); 
         const  item = await Leos.getItem(nft);
         
         const tokenUri = await Leos.tokenURI(item.itemId);
@@ -68,22 +59,11 @@ const Detail = () => {
         )   
     } 
   }
-  const getAccountDetails = async()=>{
-    const web3Modal = new Web3Modal( )
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)    
-    const signer = provider.getSigner()
+  
 
-    const address = await signer.getAddress();
-
-    setAccountAddress(address);
-    setSigner(signer);
-
-  }
-
-  const Buy = async() =>{ 
-    const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, Signer);
-    const Leos = new ethers.Contract(LeosAddress, LeosJSON.abi, Signer);
+  const Buy = async() =>{  
+    const LeosCollection = getLeosCollectionContract();
+    const Leos = getLeosContract();
     const collectionOwnerAddress = await LeosCollection.getOwner(collectionId);
     const collectionListingFee = await LeosCollection.getCollectionListingPrice(collectionId) ;
     const nftListingFee = await Leos.getListingPrice();
@@ -92,15 +72,14 @@ const Detail = () => {
     const transaction = await Leos.createMarketSale(nft, collectionOwnerAddress , collectionListingFee, {value : p} )
     transaction.wait() 
   }
-  const Sell = async() =>{
-    const Leos = new ethers.Contract(LeosAddress, LeosJSON.abi, Signer);
+  const Sell = async() =>{ 
+    const Leos = getLeosContract();
     const ListingFee = await Leos.getListingPrice();
     const price = ethers.utils.parseUnits(FormInput.price, 'ether');
     const transaction = await Leos.resellToken(nft, price, {value: ListingFee})
     transaction.wait();
   }
-  React.useEffect(()=>{
-    getAccountDetails();
+  React.useEffect(()=>{ 
     LoadNft();
   },[collectionId, nft])
 
@@ -123,7 +102,8 @@ const Detail = () => {
               <p className="text-l mb-4 font-bold text-white">{nftNft.price} MATIC</p>
             </div>
           </div>
-          {nftNft.sold === true & nftNft.owner === AccountAddress? 
+          {currentAccount === undefined? "" :
+          nftNft.sold === true & nftNft.owner === currentAccount? 
              Input === true? 
              <div>
               <input
@@ -142,7 +122,7 @@ const Detail = () => {
               </div>
               : 
             
-              <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded-xl my-3" onClick={() => setInput(!Input)}>Sell</button> 
+              <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded-xl my-3 hover:bg-pink-400" onClick={() => setInput(!Input)}>Sell</button> 
 
             
 
@@ -154,6 +134,8 @@ const Detail = () => {
         :
         ""
         }
+        {/* <p className="text-l mb-4 font-bold text-white text-center">Transactions</p> */}
+
         
       </Details>
 

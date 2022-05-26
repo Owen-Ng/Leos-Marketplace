@@ -2,16 +2,17 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import React from 'react'
-import { ethers } from 'ethers' 
+// import { ethers } from 'ethers' 
 import Link from 'next/link';
+import { ethers } from 'ethers';
 import axios from 'axios'
-import { LeosCollectionAddress } from '../secrets/contractAddress';
-import LeosCollectionJSON from "../secrets/LeosCollection.json";
+// import { LeosCollectionAddress } from '../secrets/contractAddress';
+// import LeosCollectionJSON from "../secrets/LeosCollection.json";
 import styled from "styled-components"
-import { LeosAddress } from '../secrets/contractAddress'
-import LeosNFTJSON from "../secrets/Leos.json";
-
-import { rpcHttp } from '../secrets/contractAddress';
+// import { LeosAddress } from '../secrets/contractAddress'
+// import LeosNFTJSON from "../secrets/Leos.json";
+import {  WalletContext} from "./context/WalletConnection" 
+// import { rpcHttp } from '../secrets/contractAddress';
 // import styled from "styled-components"
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 const Banner = styled.div`
@@ -32,6 +33,7 @@ const ImgFrame = styled.div`
 
 const RandomCollection = ({Collections}) =>{
   const Random = Math.floor(Math.random()* Collections.length) ;
+  
   return (
     <Link href={`/collections/${Collections[Random].tokenId}`}> 
            
@@ -57,13 +59,13 @@ const Home  = () => {
   const [Collections, setCollections] = React.useState([]);
   const [LoadingState, setLoadingState] = React.useState("not loaded");
   const [NFTs, setNFTs] = React.useState([]);
-  const provider = new ethers.providers.JsonRpcProvider(rpcHttp ); 
+  const {getLeosCollectionContract, getLeosContract} = React.useContext(WalletContext)
+ 
   
   const loadCollections = async () =>{
         try{
-          const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, provider);
-          const data = await LeosCollection.fetchAllCollections(); 
-          console.log(data)
+          const LeosCollection = getLeosCollectionContract();
+          const data = await LeosCollection.fetchAllCollections();  
           const items = await Promise.all(data.map(async i =>{ 
               const tokenUri = await LeosCollection.tokenURI(i.itemId);
               const meta = await axios.get(tokenUri);
@@ -89,7 +91,7 @@ const Home  = () => {
 
   const loadNFTs = async () =>{ 
     try{ 
-      const Leos = new ethers.Contract(LeosAddress, LeosNFTJSON.abi, provider); 
+      const Leos = getLeosContract();
       const nftNFTs = await Leos.fetchMarketItems();
 
       const items = await Promise.all(nftNFTs.map(async i =>{ 
@@ -120,8 +122,7 @@ const Home  = () => {
   }
   const LoadData = async() =>{
     loadCollections();
-    loadNFTs();
-    console.log(Collections)
+    loadNFTs(); 
     setLoadingState("loaded")
   }
 

@@ -3,9 +3,11 @@ import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 import Link from 'next/link';
 import logo from "../../public/logo.png";
-  
+import { WalletContext } from "../../pages/context/WalletConnection";
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = React.useState(false); 
+  const {currentAccount, ConnectWallet} = React.useContext(WalletContext)
+  const shortenAddress = (address) => `${address.slice(0,5)}...${address.slice(address.length - 4, address.length)}`
   return (
     <nav className="w-full flex md:justify-center justify-between items-center p-4">
         <Link href="/">
@@ -19,12 +21,22 @@ const Navbar = () => {
         <Link href="/collections">
             <li className={`mx-4 cursor-pointer`} >Collections</li>
         </Link>
-        <Link href={{pathname: "/portfolio", query: {data: "Hello"}}}>
-            <li className={`mx-4 cursor-pointer`} >My Portfolio</li>
-        </Link>
-        <Link href="/profile">
+
+        {currentAccount === undefined?
+          <li className={`mx-4 cursor-pointer`} onClick={()=> ConnectWallet()}>ConnectWallet</li>
+
+         :  
+         <>
+            <Link href={{pathname: "/portfolio", query: {data: "Hello"}}}>
+                <li className={`mx-4 cursor-pointer`} >My Portfolio</li>
+            </Link>
+            <Link href="/profile">
             <li className={`mx-4 cursor-pointer`} >Profile</li>
-        </Link>  
+            </Link>  
+            <li className={`mx-4 eth-card p-1 rounded-sm`}>{shortenAddress(currentAccount)}</li>
+            </>
+        } 
+             
       </ul>
       <div className="flex relative">
         {!toggleMenu && (

@@ -5,13 +5,10 @@ import { AiFillPlayCircle } from "react-icons/ai";
 import { BsFillFileEarmarkPlusFill } from "react-icons/bs"; 
 
 import {useRouter} from 'next/router';
-import axios from 'axios'
-import Web3Modal from "web3modal"
-import { ethers } from 'ethers' 
-import { LeosCollectionAddress } from '../../secrets/contractAddress';
-import LeosCollectionJSON from "../../secrets/LeosCollection.json";
-import { rpcHttp } from '../../secrets/contractAddress';
+import axios from 'axios' 
+import { ethers } from 'ethers'  
 import styled from "styled-components"
+import { WalletContext } from '../context/WalletConnection';
 
 const ButtonAbsolute = styled.div`
   position: absolute;
@@ -36,10 +33,10 @@ const Banner = styled.div`
 const Collections = () => { 
   const [Collections, setCollections] = React.useState();
     const [LoadingState, setLoadingState] = React.useState("not loaded");
-    const loadCollections = async () =>{
-        const provider = new ethers.providers.JsonRpcProvider(rpcHttp );
+    const {getLeosCollectionContract, getLeosContract, currentAccount} = React.useContext(WalletContext)
+    const loadCollections = async () =>{ 
         console.log("test0")
-        const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, provider);
+        const LeosCollection =  getLeosCollectionContract();
         const data = await LeosCollection.fetchAllCollections();
         console.log("test")
         console.log(data)
@@ -72,18 +69,21 @@ const Collections = () => {
       Collections 
       
         <div> 
-          <ButtonAbsolute>
-          <Link href={`/collections/create-collection`}>
-            <button  
-              className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
-            >
-              <BsFillFileEarmarkPlusFill className="text-white mr-2" />
-              <p className="text-white text-base font-semibold">
-                Create Collection
-              </p>
-            </button>
-          </Link>
-          </ButtonAbsolute>
+          {currentAccount === undefined ? "" : 
+            <ButtonAbsolute>
+            <Link href={`/collections/create-collection`}>
+              <button  
+                className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+              >
+                <BsFillFileEarmarkPlusFill className="text-white mr-2" />
+                <p className="text-white text-base font-semibold">
+                  Create Collection
+                </p>
+              </button>
+            </Link>
+            </ButtonAbsolute>
+          }
+          
             {LoadingState === "loaded" && Collections.length > 0? 
             <div className="flex justify-start">
             <div className="px-4" style={{ width: '1200px' }}>

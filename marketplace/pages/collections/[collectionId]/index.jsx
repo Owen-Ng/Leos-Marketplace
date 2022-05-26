@@ -1,15 +1,12 @@
 import React from 'react' 
-import {useRouter} from 'next/router';
-import { LeosAddress } from '../../../secrets/contractAddress';
-import LeosJSON from "../../../secrets/Leos.json";
-import { rpcHttp } from '../../../secrets/contractAddress';
+import {useRouter} from 'next/router'; 
 import { ethers } from 'ethers';
-import { LeosCollectionAddress } from '../../../secrets/contractAddress';
-import LeosCollectionJSON from "../../../secrets/LeosCollection.json"
+ 
 import styled from "styled-components"
 import { BsFillFileEarmarkPlusFill } from "react-icons/bs"; 
 import Link from 'next/link';
 import axios from 'axios'
+import { WalletContext } from '../../context/WalletConnection';
 const ButtonAbsolute = styled.div`
   position: absolute;
   right: 1px; 
@@ -40,15 +37,14 @@ const nft = () => {
     const router = useRouter();
     const {collectionId} = router.query;
     console.log(router.query)
-    
+    const {getLeosContract, getLeosCollectionContract,currentAccount} = React.useContext(WalletContext);
     const [NFTs, setNFTs] = React.useState([]); 
     const [LoadingState, setLoadingState] = React.useState("not loaded");
 
     const loadNFTs = async() =>{
-      if (collectionId !== undefined){
-        const provider = new ethers.providers.JsonRpcProvider(rpcHttp ); 
-        const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, provider);
-        const Leos = new ethers.Contract(LeosAddress, LeosJSON.abi, provider);
+      if (collectionId !== undefined){ 
+        const LeosCollection = getLeosCollectionContract();
+        const Leos = getLeosContract();
         console.log(collectionId)
         const nftNFTs = await Leos.fetchCollectionItems(collectionId);
 
@@ -85,18 +81,21 @@ const nft = () => {
     return (
         <div> 
             <div>
-            <ButtonAbsolute>
-              <Link href={`/collections/${collectionId}/create-nft`}>
-                <button  
-                  className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
-                >
-                  <BsFillFileEarmarkPlusFill className="text-white mr-2" />
-                  <p className="text-white text-base font-semibold">
-                    Create NFT
-                  </p>
-                </button>
-              </Link>
-            </ButtonAbsolute>
+              {currentAccount === undefined? "":
+                <ButtonAbsolute>
+                <Link href={`/collections/${collectionId}/create-nft`}>
+                  <button  
+                    className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
+                  >
+                    <BsFillFileEarmarkPlusFill className="text-white mr-2" />
+                    <p className="text-white text-base font-semibold">
+                      Create NFT
+                    </p>
+                  </button>
+                </Link>
+              </ButtonAbsolute>
+              }
+            
             {LoadingState === "loaded" && NFTs.length > 0? 
             
             <div className="flex justify-start">

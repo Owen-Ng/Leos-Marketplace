@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React,{ useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
@@ -6,12 +6,13 @@ import Web3Modal from 'web3modal'
 import Link from 'next/link';
 import { LeosCollectionAddress } from '../../secrets/contractAddress'
 import LeosCollectionJSON from "../../secrets/LeosCollection.json";
+import { WalletContext } from '../context/WalletConnection'
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0') 
 const CreateCollection = () => {
     const [fileUrl, setFileUrl] = useState(null)
     const [formInput, updateFormInput] = useState({ price: '',  description: '' })
     const router = useRouter()
-  
+    const {getLeosCollectionContract, currentAccount} = React.useContext(WalletContext)
     async function onChange(e) {
       const file = e.target.files[0]
       try {
@@ -44,16 +45,11 @@ const CreateCollection = () => {
             console.log('Error uploading file: ', error)
           }  
         }
-        async function createCollection(url) { 
-          const web3Modal = new Web3Modal( )
-          const connection = await web3Modal.connect()
-          const provider = new ethers.providers.Web3Provider(connection)    
-          const signer = provider.getSigner()
-          console.log(signer)
+        async function createCollection(url) {  
           
           console.log("awdadw")
           /* next, create the item */
-          let contract = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, signer) 
+          let contract = getLeosCollectionContract();
           console.log("awdadw")
           const price = ethers.utils.parseUnits(formInput.price, 'ether')
          

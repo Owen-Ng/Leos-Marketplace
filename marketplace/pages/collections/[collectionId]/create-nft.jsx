@@ -2,21 +2,17 @@ import { useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
-import Web3Modal from 'web3modal' 
+ 
 import Link from 'next/link';
-
-import { LeosAddress } from '../../../secrets/contractAddress'
-import LeosNFTJSON from "../../../secrets/Leos.json";
-
-import { LeosCollectionAddress } from '../../../secrets/contractAddress';
-import LeosCollectionJSON from "../../../secrets/LeosCollection.json"
+ 
 import { BsThreeDotsVertical } from 'react-icons/bs'
-
+import { WalletContext } from '../../context/WalletConnection';
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0') 
 const CreateNft = () => {
     const [fileUrl, setFileUrl] = useState(null)
     const [formInput, updateFormInput] = useState({ price: '',  description: '' })
     const router = useRouter()
+    const {getLeosContract, getLeosCollectionContract, ConnectWallet} = React.useContext(WalletContext);
     const {collectionId} = router.query;
      
     async function onChange(e) {
@@ -52,16 +48,13 @@ const CreateNft = () => {
           }  
         }
         async function createNFT(url) { 
-          const web3Modal = new Web3Modal( )
-          const connection = await web3Modal.connect()
-          const provider = new ethers.providers.Web3Provider(connection)    
-          const signer = provider.getSigner()
-          console.log(signer)
+          
+          await ConnectWallet()
           
           console.log("awdadw")
           /* next, create the item */
-          const NFTcontract = new ethers.Contract(LeosAddress, LeosNFTJSON.abi, signer) 
-          const CollectionContract = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, signer)
+          const NFTcontract = getLeosContract(); 
+          const CollectionContract = getLeosCollectionContract();
           console.log("awdadw")
           const price = ethers.utils.parseUnits(formInput.price, 'ether')
          
