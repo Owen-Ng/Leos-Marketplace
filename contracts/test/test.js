@@ -1,5 +1,3 @@
-/**To test the contract */
-
 describe("Leos", function() {
 
     it("Simulate Collection creation", async function(){
@@ -135,16 +133,16 @@ describe("Leos", function() {
       // CollectionAddress - collection address of the contract 
       const auctionPrice = ethers.utils.parseUnits('1', 'ether')
       console.log("before createtoken") 
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[0].price, items[0].itemId, CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[0].price, items[0].itemId,
       {value: (items[0].price.add( leosListingPrice) ).toString()});
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId, CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId,
       {value: items[1].price.add(leosListingPrice)});  
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice, items[0].price, items[0].itemId,CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice, items[0].price, items[0].itemId,
       {value: (items[0].price.add( leosListingPrice) ).toString()});
       console.log("First createToken passed")
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId, CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId,
       {value: items[1].price.add(leosListingPrice)});  
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId, CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId,
       {value: items[1].price.add(leosListingPrice) });  
       console.log("Second createToken passed")
 
@@ -157,8 +155,7 @@ describe("Leos", function() {
           const tokenUri = await Leos.tokenURI(i.itemId);
           let r = {
             itemId: i.itemId,
-              price: i.price,
-              collectionaddress: i.CollectionAddress,
+              price: i.price, 
               URI: tokenUri
           }
           return r;
@@ -170,8 +167,7 @@ describe("Leos", function() {
         const tokenUri = await Leos.tokenURI(i.itemId);
         let r = {
           itemId: i.itemId,
-            price: i.price,
-            collectionaddress: i.CollectionAddress,
+            price: i.price, 
             tokenUri
         }
         return r;
@@ -258,14 +254,14 @@ describe("Leos", function() {
       leosListingPrice = await Leos.getListingPrice();
       console.log("before createtoken")
       console.log(items[0].price.add( leosListingPrice) )
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[0].price, items[0].itemId, CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[0].price, items[0].itemId ,
       {value: (items[0].price.add( leosListingPrice) ).toString()});
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice, items[0].price, items[0].itemId,CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice, items[0].price, items[0].itemId ,
       {value: (items[0].price.add( leosListingPrice) ).toString()});
       console.log("First createToken passed")
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId, CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId ,
       {value: items[1].price.add(leosListingPrice)});  
-      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId, CollectionAddress,
+      await Leos.createToken("https://www.mytokenlocation.com", auctionPrice,items[1].price, items[1].itemId ,
       {value: items[1].price.add(leosListingPrice) });  
       console.log("Second createToken passed")
 
@@ -278,8 +274,7 @@ describe("Leos", function() {
           const tokenUri = await Leos.tokenURI(i.itemId);
           let r = {
             itemId: i.itemId,
-              price: i.price,
-              collectionaddress: i.CollectionAddress,
+              price: i.price, 
               URI: tokenUri
           }
           return r;
@@ -291,8 +286,7 @@ describe("Leos", function() {
         const tokenUri = await Leos.tokenURI(i.itemId);
         let r = {
           itemId: i.itemId,
-            price: i.price,
-            collectionaddress: i.CollectionAddress,
+            price: i.price, 
             tokenUri
         }
         return r;

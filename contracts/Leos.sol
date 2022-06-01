@@ -24,8 +24,7 @@ contract Leos is ERC721URIStorage, ReentrancyGuard{
 
     struct MarketItem {
         uint itemId; 
-        uint256 CollectionId;
-        address CollectionAddress;
+        uint256 CollectionId; 
         address payable seller;
         address payable owner;
         uint256 price;
@@ -34,8 +33,7 @@ contract Leos is ERC721URIStorage, ReentrancyGuard{
 
     event MarketItemCreated (
         uint indexed itemId,
-        uint256 indexed CollectionId,
-        address indexed CollectionAddress,
+        uint256 indexed CollectionId, 
         address seller,
         address owner,
         uint256 price,
@@ -53,6 +51,12 @@ contract Leos is ERC721URIStorage, ReentrancyGuard{
     function getListingPrice() public view returns (uint256) {
       return listingPrice;
     }
+    /**Return only one item given the id */
+
+    function getItem(uint id) public view returns (MarketItem memory){
+      MarketItem storage res = idToMarketItem[id];
+      return res;
+    }
  
 
     /* Mints a token and lists it in the marketplace */
@@ -61,29 +65,27 @@ contract Leos is ERC721URIStorage, ReentrancyGuard{
      */
     function createToken(string memory tokenURI, 
     uint256 price, uint256 collectionfee, 
-    uint256 CollectionId,address CollectionAddress) public payable returns (uint) {
+    uint256 CollectionId ) public payable returns (uint) {
       require(msg.value == listingPrice + collectionfee, "Listing price is 0.025 + collectionfee (vary)");
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
 
       _mint(msg.sender, newTokenId);
       _setTokenURI(newTokenId, tokenURI);
-      createMarketItem(newTokenId, price, CollectionId, CollectionAddress);
+      createMarketItem(newTokenId, price, CollectionId );
       return newTokenId;
     }
 
     function createMarketItem(
       uint256 tokenId,
       uint256 price,
-      uint256 CollectionId,
-      address CollectionAddress
+      uint256 CollectionId 
     ) private {
       require(price > 0, "Price must be at least 1 wei"); 
 
       idToMarketItem[tokenId] =  MarketItem(
         tokenId,
-        CollectionId,
-        CollectionAddress,
+        CollectionId, 
         payable(msg.sender),
         payable(address(this)),
         price,
@@ -93,8 +95,7 @@ contract Leos is ERC721URIStorage, ReentrancyGuard{
       _transfer(msg.sender, address(this), tokenId);
       emit MarketItemCreated(
         tokenId,
-        CollectionId,
-        CollectionAddress,
+        CollectionId, 
         msg.sender,
         address(this),
         price,
