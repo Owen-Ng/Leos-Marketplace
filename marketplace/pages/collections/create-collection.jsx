@@ -7,7 +7,7 @@ import Web3Modal from 'web3modal'
 import Link from 'next/link';
 import { LeosCollectionAddress } from '../../secrets/contractAddress'
 import LeosCollectionJSON from "../../secrets/LeosCollection.json";
-import { WalletContext } from '../context/WalletConnection'
+import { WalletContext } from '../../context/WalletConnection'
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0') 
 const CreateCollection = () => {
     const [fileUrl, setFileUrl] = useState(null)

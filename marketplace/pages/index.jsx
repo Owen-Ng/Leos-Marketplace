@@ -11,7 +11,7 @@ import axios from 'axios'
 import styled from "styled-components"
 // import { LeosAddress } from '../secrets/contractAddress'
 // import LeosNFTJSON from "../secrets/Leos.json";
-import {  WalletContext} from "./context/WalletConnection" 
+import {  WalletContext} from "../context/WalletConnection" 
 // import { rpcHttp } from '../secrets/contractAddress';
 // import styled from "styled-components"
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";

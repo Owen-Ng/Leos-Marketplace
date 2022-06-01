@@ -8,7 +8,7 @@ import {useRouter} from 'next/router';
 import axios from 'axios' 
 import { ethers } from 'ethers'  
 import styled from "styled-components"
-import { WalletContext } from '../context/WalletConnection';
+import { WalletContext } from '../../context/WalletConnection';
 
 const ButtonAbsolute = styled.div`
   position: absolute;
@@ -90,7 +90,7 @@ const Collections = () => {
                     <Link key={i}  href={`/collections/${collection.tokenId}`}>
                       <Banner key={i} className="border shadow rounded-xl overflow-hidden cursor-pointer">
                         <ImgFrame>
-                          <img src={collection.image} />
+                          <img  src={collection.image} />
                         </ImgFrame>
                         <div className="p-4"> 
                           <div style={{ height: '20px', overflow: 'hidden' }}>

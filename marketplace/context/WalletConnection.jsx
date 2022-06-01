@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Web3Modal, { getThemeColors } from 'web3modal' 
 import { ethers } from 'ethers';
-import { LeosAddress } from '../../secrets/contractAddress';
-import { LeosCollectionAddress } from '../../secrets/contractAddress';
-import LeosCollectionJSON from '../../secrets/LeosCollection.json'
-import LeosJSON from '../../secrets/Leos.json';
-import { rpcHttp } from '../../secrets/contractAddress';
+import { LeosAddress } from '../secrets/contractAddress';
+import { LeosCollectionAddress } from '../secrets/contractAddress';
+import LeosCollectionJSON from '../secrets/LeosCollection.json'
+import LeosJSON from '../secrets/Leos.json';
+import { rpcHttp } from '../secrets/contractAddress';
 export const WalletContext = React.createContext();
 
 export const WalletProvider = ({children}) =>{

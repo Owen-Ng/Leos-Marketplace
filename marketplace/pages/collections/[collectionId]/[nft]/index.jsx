@@ -3,7 +3,7 @@ import Link from 'next/link';
 import axios from 'axios'
 import {useRouter} from 'next/router'; 
 import styled from "styled-components" 
-import {WalletContext} from "../../../context/WalletConnection"
+import {WalletContext} from "../../../../context/WalletConnection"
 import { ethers } from 'ethers';
 import Loader from '../../../../components/Loader/Loader';
 const Container = styled.div`
@@ -79,6 +79,8 @@ const Detail = () => {
       const transaction = await Leos.createMarketSale(nft, collectionOwnerAddress , collectionListingFee, {value : p} )
       await transaction.wait() 
       setIsLoaded(true);
+      window.location.reload()
+
     }catch(e){
       console.log("Purchase error: " + e);
       console.log(e.data)
@@ -97,6 +99,7 @@ const Detail = () => {
       setIsLoaded(false)
       await transaction.wait();
       setIsLoaded(true)
+      window.location.reload()
     }catch(e){
       console.log("Reselling error :" + e.message);
       console.log(e.message)

@@ -92,14 +92,12 @@ const Portfolio = () => {
   const LoadMyCollections = async(provider) =>{
     try{
       const LeosCollection = new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, provider);
-      const data = await LeosCollection.fetchMyCollections(); 
-      console.log(data)
+      const data = await LeosCollection.fetchMyCollections();  
       const items = await Promise.all(data.map(async i =>{ 
           const tokenUri = await LeosCollection.tokenURI(i.itemId);
           const meta = await axios.get(tokenUri);
 
-          let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-          console.log(i.itemId)
+          let price = ethers.utils.formatUnits(i.price.toString(), 'ether'); 
           let item = {
               price,
               tokenId: i.itemId, 

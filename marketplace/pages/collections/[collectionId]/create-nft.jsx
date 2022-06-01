@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link';
  
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import { WalletContext } from '../../context/WalletConnection';
+import { WalletContext } from '../../../context/WalletConnection';
 import Loader from '../../../components/Loader/Loader';
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0') 
 const CreateNft = () => {
@@ -63,8 +63,7 @@ const CreateNft = () => {
 
             const totalListingFee =  listingPrice.add(collectionfee) 
 
-
-            console.log(listingPrice, collectionfee, totalListingFee)
+ 
             setIsLoaded(false)
             let transaction = await NFTcontract.createToken(url, price, collectionfee,collectionId , { value: totalListingFee })
             await transaction.wait()

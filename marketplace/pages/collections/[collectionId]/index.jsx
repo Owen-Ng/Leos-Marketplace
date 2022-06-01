@@ -6,7 +6,7 @@ import styled from "styled-components"
 import { BsFillFileEarmarkPlusFill } from "react-icons/bs"; 
 import Link from 'next/link';
 import axios from 'axios'
-import { WalletContext } from '../../context/WalletConnection';
+import { WalletContext } from '../../../context/WalletConnection';
 const ButtonAbsolute = styled.div`
   position: absolute;
   right: 1px; 

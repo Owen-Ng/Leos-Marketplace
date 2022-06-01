@@ -1,7 +1,7 @@
 import '../styles/globals.css' 
 import Navbar from "../components/Navbar/Navbar"
 import Head from 'next/head'
-import {WalletProvider} from "./context/WalletConnection.jsx"
+import {WalletProvider} from "../context/WalletConnection"
 function MyApp({ Component, pageProps } ) {
   return (
     <WalletProvider>

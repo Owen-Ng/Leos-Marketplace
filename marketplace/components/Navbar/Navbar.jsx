@@ -3,7 +3,7 @@ import { HiMenuAlt4 } from "react-icons/hi";
 import { AiOutlineClose } from "react-icons/ai";
 import Link from 'next/link';
 import logo from "../../public/logo.png";
-import { WalletContext } from "../../pages/context/WalletConnection";
+import { WalletContext } from "../../context/WalletConnection";
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = React.useState(false); 
   const {currentAccount, ConnectWallet} = React.useContext(WalletContext)
