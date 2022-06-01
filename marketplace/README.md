@@ -1,23 +1,19 @@
-# Next.js + Tailwind CSS Example
+<p align="center"  >
+<img src = "https://user-images.githubusercontent.com/54727272/171478966-742cb7b0-bee2-4798-8268-857fbd97fa02.png" style="border-radius:45px 0.1px 45px 0.1px;" />
+</p>
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+# Leos Marketplace 
 
-## Deploy your own
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+### A place to create sub repositories in the blockchain network with users' dedicated listing price. 
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+### Any other users can then create, and trade NFT inside the sub repositories by paying the fees listed from the sub repositories
 
-## How to use
+### Technologies used: ReactJS, HardHat, NextJs, EtherJS, Web3Modal, axios and other styling framework
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+### Language used: Solidity and JavaScript
 
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-# or
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-# or
-pnpm create next-app -- --example with-tailwindcss with-tailwindcss-app
-```
+### It is hosted from AWS Cloud Native more spacifically Cloudfront and S3 Bucket.
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+### Link: https://dc3zx7drpcc5t.cloudfront.net
+
