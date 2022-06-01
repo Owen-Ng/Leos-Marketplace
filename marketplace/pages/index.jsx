@@ -30,21 +30,26 @@ const ImgFrame = styled.div`
   width: 100%;
   height: 200px;
 `
+const shortenAddress = (address) => `${address.slice(0,5)}...${address.slice(address.length - 4, address.length)}`
 
-const RandomCollection = ({Collections}) =>{
-  const Random = Math.floor(Math.random()* Collections.length) ;
-  
+const RandomCollection = ({Collections,account}) =>{
+  // const Random = Math.floor(Math.random()* Collections.length) ;
+  const Random = 2;
   return (
     <Link href={`/collections/${Collections[Random].tokenId}`}> 
            
           <Banner   className="border shadow rounded-xl overflow-hidden cursor-pointer">
             <ImgFrame>
-              <img src={Collections[Random ].image} />
+              <img    src={Collections[Random ].image} />
             </ImgFrame>
             <div className="p-4">
-              <p style={{ height: '40px' }} className="text-2xl font-semibold">{Collections[Random].name}</p>
+              <p style={{ height: '20px' }} className="text-2xl font-semibold">{Collections[Random].name}</p>
               <div style={{ height: '20px', overflow: 'hidden' }}>
                 <p className="text-gray-400">{Collections[Random].description}</p>
+              </div>
+              <div style={{ height: '10px',marginTop:"5px",display:'flex', justifyContent:"space-between"  }}>
+                <p className="text-gray-400">  Owner: </p>
+                <p className="text-gray-400"> {Collections[Random ].owner === account?"You": shortenAddress(Collections[Random ].owner)}</p>
               </div>
             </div>
             <div className="p-4 bg-black">
@@ -59,7 +64,7 @@ const Home  = () => {
   const [Collections, setCollections] = React.useState([]);
   const [LoadingState, setLoadingState] = React.useState("not loaded");
   const [NFTs, setNFTs] = React.useState([]);
-  const {getLeosCollectionContract, getLeosContract} = React.useContext(WalletContext)
+  const {getLeosCollectionContract, getLeosContract, currentAccount} = React.useContext(WalletContext)
  
   
   const loadCollections = async () =>{
@@ -70,8 +75,7 @@ const Home  = () => {
               const tokenUri = await LeosCollection.tokenURI(i.itemId);
               const meta = await axios.get(tokenUri);
 
-              let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-              console.log(i.itemId)
+              let price = ethers.utils.formatUnits(i.price.toString(), 'ether'); 
               let item = {
                   price,
                   tokenId: i.itemId, 
@@ -130,9 +134,9 @@ const Home  = () => {
     LoadData();
   }, [])
   return ( 
-    <div className="flex w-full justify-center items-center">
-      <div className="flex mf:flex-row flex-col items-start justify-between md:p-20 py-12 px-4">
-        <div className="flex flex-2 justify-start items-start flex-col mf:mr-10">
+    <div className="flex w-[60%] justify-center items-center m-auto">
+      <div className="flex  w-[100%]  mf:flex-row flex-col items-start justify-around md:p-20 py-12 px-4">
+        <div className="flex   justify-start items-start flex-col mf:mr-10">
           <h1 className="text-3xl sm:text-5xl text-white text-gradient py-1">
             Buy and Sell <br /> NFTs
           </h1>
@@ -141,7 +145,7 @@ const Home  = () => {
           </p>
            
 
-          <div className="grid sm:grid-cols-3 grid-cols-2 w-full mt-10">
+          <div className="grid sm:grid-cols-3 grid-cols-2 mf:w-[400px] w-[300px] mt-10 mb-[30px]">
             <div className={`rounded-tl-2xl ${companyCommonStyles}`}>
               Reliability
             </div>
@@ -159,9 +163,9 @@ const Home  = () => {
           </div>
         </div>
 
-        <div style={{width: "500px"}} className="flex flex-col flex-1 items-center justify-end w-100px ">
+        <div style={{width: "300px"}} className="flex shrink-0 items-center justify-center ">
           { LoadingState === "loaded" & Collections.length > 0 ?
-           <RandomCollection Collections={Collections}/>
+           <RandomCollection Collections={Collections} account = {currentAccount}/>
         :
         ""
         }

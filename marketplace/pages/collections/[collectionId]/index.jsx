@@ -26,6 +26,8 @@ const Shadow = styled.div`
         box-shadow: 0 0 3px 3px white;
     }
 `
+const shortenAddress = (address) => `${address.slice(0,5)}...${address.slice(address.length - 4, address.length)}`
+
 const displayName = (rank) =>{
   while (rank.length < 4){
     rank = "0"+ rank;
@@ -35,8 +37,7 @@ const displayName = (rank) =>{
 }
 const nft = () => {
     const router = useRouter();
-    const {collectionId} = router.query;
-    console.log(router.query)
+    const {collectionId} = router.query; 
     const {getLeosContract, getLeosCollectionContract,currentAccount} = React.useContext(WalletContext);
     const [NFTs, setNFTs] = React.useState([]); 
     const [LoadingState, setLoadingState] = React.useState("not loaded");
@@ -44,8 +45,7 @@ const nft = () => {
     const loadNFTs = async() =>{
       if (collectionId !== undefined){ 
         const LeosCollection = getLeosCollectionContract();
-        const Leos = getLeosContract();
-        console.log(collectionId)
+        const Leos = getLeosContract(); 
         const nftNFTs = await Leos.fetchCollectionItems(collectionId);
 
         const items = await Promise.all(nftNFTs.map(async i =>{ 
@@ -110,7 +110,20 @@ const nft = () => {
                                     </ImgFrame>
                                     <div className="p-4"> 
                                         <div style={{ height: '20px', overflow: 'hidden' }}>
-                                        <p className="text-gray-400">{displayName(nft.tokenId.toString())}</p>
+                                          <p className="text-gray-400">{displayName(nft.tokenId.toString())}</p>
+                                        </div>
+                                        <div style={{ height: '10px',marginTop:"5px",display:'flex', justifyContent:"space-between"  }}>
+                                          {nft.sold? 
+                                            <>
+                                            <p className="text-gray-400">  Owner: </p>
+                                            <p className="text-gray-400"> {nft.owner === currentAccount?"You" : shortenAddress(nft.owner)}</p>
+                                            </>
+                                           : 
+                                           <> 
+                                           <p className="text-gray-400">  On Sale by: </p>
+                                           <p className="text-gray-400"> {nft.seller === currentAccount?"You" : shortenAddress(nft.seller)}</p>
+                                           </>
+                                           } 
                                         </div>
                                     </div>
                                     <div className="p-4 bg-black">

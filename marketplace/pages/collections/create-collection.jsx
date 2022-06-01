@@ -2,6 +2,7 @@ import React,{ useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
+import Loader from '../../components/Loader/Loader'
 import Web3Modal from 'web3modal' 
 import Link from 'next/link';
 import { LeosCollectionAddress } from '../../secrets/contractAddress'
@@ -13,6 +14,7 @@ const CreateCollection = () => {
     const [formInput, updateFormInput] = useState({ price: '',  description: '' })
     const router = useRouter()
     const {getLeosCollectionContract, currentAccount} = React.useContext(WalletContext)
+    const [IsLoaded, setIsLoaded] = React.useState(true)
     async function onChange(e) {
       const file = e.target.files[0]
       try {
@@ -46,19 +48,26 @@ const CreateCollection = () => {
           }  
         }
         async function createCollection(url) {  
-          
-          console.log("awdadw")
+           
           /* next, create the item */
-          let contract = getLeosCollectionContract();
-          console.log("awdadw")
-          const price = ethers.utils.parseUnits(formInput.price, 'ether')
-         
-          let listingPrice = await contract.getListingPrice()
-          listingPrice = listingPrice.toString()
-      
-          let transaction = await contract.createCollection(url, price, formInput.description, { value: listingPrice })
-          await transaction.wait()
-          router.push('/collections')
+          try{
+            let contract = getLeosCollectionContract();
+           
+            const price = ethers.utils.parseUnits(formInput.price, 'ether')
+           
+            let listingPrice = await contract.getListingPrice()
+            listingPrice = listingPrice.toString()
+            setIsLoaded(false)
+            let transaction = await contract.createCollection(url, price, formInput.description, { value: listingPrice })
+            await transaction.wait()
+            setIsLoaded(true)
+            router.push('/collections')
+          }catch(e){
+            console.log("Creating collection error: " + e)
+            alert(e.data.message)
+            setIsLoaded(true);
+          }
+          
         }
       
         return (
@@ -90,9 +99,13 @@ const CreateCollection = () => {
                   <img className="rounded mt-4" width="350" src={fileUrl} />
                 )
               }
-              <button onClick={createMarketCollection} className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg">
-                Create Digital Asset
-              </button>
+              {IsLoaded === true? 
+               <button onClick={createMarketCollection} className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg">
+               Create Digital Asset
+             </button>
+             : <Loader/>
+             }
+             
             </div>
           </div>
         )

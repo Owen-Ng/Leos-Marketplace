@@ -50,15 +50,12 @@ export const WalletProvider = ({children}) =>{
         }
     }
 
-    const IsWalletConnected = async () =>{
-        console.log(eth)
+    const IsWalletConnected = async () =>{ 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const accounts = await provider.listAccounts();
-        console.log(accounts)
+        const accounts = await provider.listAccounts(); 
         return accounts.length  ;
     }
-    const getLeosCollectionContract = () =>{  
-        console.log(Signer) 
+    const getLeosCollectionContract = () =>{   
         if (!Signer & !currentAccount){ 
             return new ethers.Contract(LeosCollectionAddress, LeosCollectionJSON.abi, genericProvider)
 
@@ -68,8 +65,7 @@ export const WalletProvider = ({children}) =>{
 
         }
     }
-    const getLeosContract = () =>{ 
-        console.log(Signer) 
+    const getLeosContract = () =>{  
         if (!Signer & !currentAccount){
             return new ethers.Contract(LeosAddress, LeosJSON.abi, genericProvider);
         }else{

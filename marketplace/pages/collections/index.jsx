@@ -30,23 +30,20 @@ const Banner = styled.div`
     box-shadow: 0 0 3px 3px #364fa7;
   }
 `
+const shortenAddress = (address) => `${address.slice(0,5)}...${address.slice(address.length - 4, address.length)}`
+
 const Collections = () => { 
   const [Collections, setCollections] = React.useState();
     const [LoadingState, setLoadingState] = React.useState("not loaded");
     const {getLeosCollectionContract, getLeosContract, currentAccount} = React.useContext(WalletContext)
-    const loadCollections = async () =>{ 
-        console.log("test0")
+    const loadCollections = async () =>{  
         const LeosCollection =  getLeosCollectionContract();
-        const data = await LeosCollection.fetchAllCollections();
-        console.log("test")
-        console.log(data)
-        const items = await Promise.all(data.map(async i =>{
-            console.log("test1")
+        const data = await LeosCollection.fetchAllCollections(); 
+        const items = await Promise.all(data.map(async i =>{ 
             const tokenUri = await LeosCollection.tokenURI(i.itemId);
             const meta = await axios.get(tokenUri);
 
-            let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-            console.log(i.itemId)
+            let price = ethers.utils.formatUnits(i.price.toString(), 'ether'); 
             let item = {
                 price,
                 tokenId: i.itemId, 
@@ -95,10 +92,13 @@ const Collections = () => {
                         <ImgFrame>
                           <img src={collection.image} />
                         </ImgFrame>
-                        <div className="p-4">
-                          <p style={{ height: '40px' }} className="text-2xl font-semibold">{collection.name}</p>
+                        <div className="p-4"> 
                           <div style={{ height: '20px', overflow: 'hidden' }}>
-                            <p className="text-gray-400">{collection.description}</p>
+                            <p className="text-gray-400">{collection.description}</p> 
+                          </div>
+                          <div style={{ height: '10px',marginTop:"5px",display:'flex', justifyContent:"space-between"  }}>
+                            <p className="text-gray-400">  Owner: </p>
+                            <p className="text-gray-400"> {collection.owner === currentAccount?"You": shortenAddress(collection.owner)}</p>
                           </div>
                         </div>
                         <div className="p-4 bg-black">
