@@ -15,5 +15,5 @@
 
 ### It is hosted from AWS Cloud Native more spacifically Cloudfront and S3 Bucket.
 
-### Link: https://dc3zx7drpcc5t.cloudfront.net
+### Link: https://dvgyxhv4ninp.cloudfront.net/
 
